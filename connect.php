@@ -1,20 +1,22 @@
 <?php
-if(isset($_POST['registration']))
-{
-    $con = mysqli_connect('localhost','root','','test');
-    $FirstName = $_POST['FirstName'];
-    $LastName = $_POST['LastName'];
+    $Firstname = $_POST['Firstname'];
+    $Lastname = $_POST['Lastname'];
     $People = $_POST['People'];
     $Message = $_POST['Message'];
-    $sql = "INSERT INTO registration(id, FirstName, LastName, People, Message) VALUES ('0', '$FirstName', '$LastName', '$People', '$Message')";
-    $rs = mysqli_query($con, $sql);
-    if($rs)
+
+    $conn = new mysqli('localhost','root','','test');
+    if($conn->connect_error)
     {
-        echo "Record Sent";
+        die('connection failed : '.$conn->connect_error);
+
     }
-}
-else
-{
-    echo "?";
-}
+    else{
+        $stmt = $conn->prepare("insert into register(Firstname, Lastname, People, Message) values(?, ?, ?, ?)");
+        $stmt->bind_param("ssis", $Firstname, $Lastname, $People, $Message);
+        $stmt->execute();
+        echo "😊";
+        $stmt->close();
+        $conn->close();
+
+    }
 ?>
